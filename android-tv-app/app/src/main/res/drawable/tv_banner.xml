@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Placeholder Android TV launcher banner (should be 320x180). Replace with
+  a real branded banner before wider rollout.
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0F172A" />
+        </shape>
+    </item>
+    <item
+        android:gravity="bottom"
+        android:height="12dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#38BDF8" />
+        </shape>
+    </item>
+</layer-list>

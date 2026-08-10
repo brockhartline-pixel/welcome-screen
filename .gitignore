@@ -1,0 +1,29 @@
+# Node / Next.js (web/)
+node_modules/
+.next/
+out/
+web/.env
+web/.env.local
+web/.env.*.local
+*.tsbuildinfo
+npm-debug.log*
+
+# Android (android-tv-app/)
+android-tv-app/.gradle/
+android-tv-app/build/
+android-tv-app/app/build/
+android-tv-app/local.properties
+android-tv-app/.idea/
+android-tv-app/*.iml
+android-tv-app/captures/
+android-tv-app/.cxx/
+*.apk
+*.aab
+
+# OS / editor
+.DS_Store
+*.swp
+.vscode/
+
+# Claude Code local settings (personal, not project config)
+.claude/settings.local.json

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hotel Welcome Screen</string>
+    <string name="setup_title">Set up this TV</string>
+    <string name="setup_subtitle">Enter this room\'s number</string>
+    <string name="setup_hint">Room number</string>
+    <string name="setup_save">Save</string>
+    <string name="setup_error_empty">Enter a room number first</string>
+</resources>
