@@ -1,3 +1,5 @@
+import { TV_TILE_CLASSNAME } from "@/components/tv/InfoGrid";
+
 /**
  * Deep-links straight into the hotel's Hulu Live TV app.
  *
@@ -17,13 +19,9 @@ export function WatchLiveTvButton({ huluPackageName }: { huluPackageName: string
     `end`;
 
   return (
-    <a
-      href={intentUrl}
-      data-tv-focusable
-      className="flex items-center gap-3 rounded-2xl bg-[var(--tv-accent)] px-8 py-6 text-2xl font-semibold text-black outline-none transition-transform focus:scale-105 focus:ring-4 focus:ring-white"
-    >
+    <a href={intentUrl} data-tv-focusable className={TV_TILE_CLASSNAME}>
       <span className="text-3xl leading-none">📺</span>
-      Watch Live TV
+      <span className="text-base font-medium text-white">Watch Live TV</span>
     </a>
   );
 }

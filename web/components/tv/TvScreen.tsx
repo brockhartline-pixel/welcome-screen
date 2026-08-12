@@ -56,7 +56,7 @@ export function TvScreen({
 
   const backgroundStyle: React.CSSProperties = hotel.background_image_url
     ? {
-        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.75)), url(${hotel.background_image_url})`,
+        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.5) 100%), url(${hotel.background_image_url})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }
@@ -80,7 +80,7 @@ export function TvScreen({
           <div className="flex items-center gap-4">
             {hotel.logo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={hotel.logo_url} alt={hotel.name} className="h-16 w-auto" />
+              <img src={hotel.logo_url} alt={hotel.name} className="h-20 w-auto" />
             ) : null}
             <span className="text-2xl font-semibold tracking-wide">{hotel.name}</span>
           </div>
@@ -100,7 +100,7 @@ export function TvScreen({
           </p>
         </main>
 
-        <footer className="flex flex-col gap-6">
+        <footer className="flex gap-4">
           <WatchLiveTvButton huluPackageName={hotel.hulu_package_name} />
           <InfoGrid pages={infoPages} onSelect={setSelectedPage} />
         </footer>
