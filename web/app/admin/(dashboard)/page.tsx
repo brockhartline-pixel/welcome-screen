@@ -16,6 +16,16 @@ const CARDS = [
     title: "Rooms",
     description: "Map room numbers to Mews so guests are greeted by name.",
   },
+  {
+    href: "/admin/orders",
+    title: "Orders",
+    description: "Incoming in-room shop orders - pack, deliver, and mark them done.",
+  },
+  {
+    href: "/admin/shop",
+    title: "Shop products",
+    description: "What guests can order to their room, prices, stock, and delivery fee.",
+  },
 ];
 
 export default function AdminHomePage() {

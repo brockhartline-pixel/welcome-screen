@@ -2,6 +2,7 @@ import { getHotel } from "@/lib/hotel";
 import { getPublishedInfoPages } from "@/lib/info-pages";
 import { getTvData } from "@/lib/tv-data";
 import { TvScreen } from "@/components/tv/TvScreen";
+import { getShopLink } from "@/lib/shop-qr";
 
 // Guest name, checkout time, and weather all change over the course of a
 // stay - never statically prerender this route.
@@ -25,12 +26,19 @@ export default async function TvPage({ params }: PageProps<"/tv/[roomNumber]">) 
     );
   }
 
-  const [infoPages, tvData] = await Promise.all([
+  const [infoPages, tvData, shopLink] = await Promise.all([
     getPublishedInfoPages(),
     getTvData(roomNumber, hotel),
+    hotel.shop_enabled ? getShopLink(roomNumber) : Promise.resolve(null),
   ]);
 
   return (
-    <TvScreen hotel={hotel} infoPages={infoPages} roomNumber={roomNumber} initialData={tvData} />
+    <TvScreen
+      hotel={hotel}
+      infoPages={infoPages}
+      roomNumber={roomNumber}
+      initialData={tvData}
+      shopLink={shopLink}
+    />
   );
 }

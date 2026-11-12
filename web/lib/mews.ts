@@ -111,3 +111,68 @@ export async function getActiveGuestForResource(
     checkoutUtc: reservation.EndUtc ?? null,
   };
 }
+
+interface MewsCustomerWithLastName {
+  Id: string;
+  LastName: string | null;
+}
+
+export type GuestVerification = "match" | "mismatch" | "unavailable";
+
+function normalizeName(name: string) {
+  return name
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z]/gi, "")
+    .toLowerCase();
+}
+
+/**
+ * Checks a guest-typed last name against the reservation currently checked
+ * into a room - the same "room number + last name" check hotel WiFi portals
+ * use. Used by the in-room shop to make sure orders charged to a room come
+ * from whoever is actually staying in it.
+ *
+ * Returns "unavailable" (never throws) when Mews isn't configured, the room
+ * has no Mews mapping, or the API call fails - the shop then accepts the
+ * order but flags it unverified so staff confirm before charging the room.
+ * Returns "mismatch" when Mews answered and the name (or occupancy) didn't
+ * match.
+ */
+export async function verifyGuestLastName(
+  mewsResourceId: string | null,
+  lastName: string,
+): Promise<GuestVerification> {
+  if (!mewsResourceId) return "unavailable";
+  const credentials = getCredentials();
+  if (!credentials) return "unavailable";
+
+  const nowUtc = new Date().toISOString();
+  const reservations = await mewsPost<MewsReservationsResponse>(
+    "/api/connector/v1/reservations/getAll",
+    {
+      ...credentials,
+      ResourceIds: [mewsResourceId],
+      States: ["Started"],
+      CollidingUtc: { StartUtc: nowUtc, EndUtc: nowUtc },
+      Extent: { Reservations: true },
+    },
+  );
+  if (!reservations) return "unavailable";
+  if (reservations.Reservations.length === 0) return "mismatch"; // nobody checked in
+
+  const customers = await mewsPost<{ Customers: MewsCustomerWithLastName[] }>(
+    "/api/connector/v1/customers/getAll",
+    {
+      ...credentials,
+      CustomerIds: reservations.Reservations.map((r) => r.CustomerId),
+    },
+  );
+  if (!customers) return "unavailable";
+
+  const typed = normalizeName(lastName);
+  const matched = customers.Customers.some(
+    (c) => c.LastName && normalizeName(c.LastName) === typed,
+  );
+  return matched ? "match" : "mismatch";
+}

@@ -7,6 +7,8 @@ const NAV_LINKS = [
   { href: "/admin/hotel", label: "Hotel branding" },
   { href: "/admin/info-pages", label: "Info pages" },
   { href: "/admin/rooms", label: "Rooms" },
+  { href: "/admin/orders", label: "Orders" },
+  { href: "/admin/shop", label: "Shop products" },
 ];
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {

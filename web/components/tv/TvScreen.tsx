@@ -7,6 +7,8 @@ import { InfoGrid } from "@/components/tv/InfoGrid";
 import { InfoDetail } from "@/components/tv/InfoDetail";
 import { WatchLiveTvButton } from "@/components/tv/WatchLiveTvButton";
 import { useTvNavigation } from "@/components/tv/useTvNavigation";
+import { ShopOverlay } from "@/components/tv/ShopOverlay";
+import { TV_TILE_CLASSNAME } from "@/components/tv/InfoGrid";
 import type { Hotel, InfoPage, TvData } from "@/lib/types";
 
 const REFRESH_INTERVAL_MS = 5 * 60 * 1000;
@@ -16,15 +18,18 @@ export function TvScreen({
   infoPages,
   roomNumber,
   initialData,
+  shopLink,
 }: {
   hotel: Hotel;
   infoPages: InfoPage[];
   roomNumber: string;
   initialData: TvData;
+  shopLink: { url: string; qrSvg: string } | null;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [data, setData] = useState(initialData);
   const [selectedPage, setSelectedPage] = useState<InfoPage | null>(null);
+  const [shopOpen, setShopOpen] = useState(false);
 
   useTvNavigation(containerRef);
 
@@ -75,7 +80,7 @@ export function TvScreen({
     >
       {/* Background content is made inert while the info detail overlay is
           open, so D-pad navigation can't "reach through" it to hidden tiles. */}
-      <div className="flex flex-1 flex-col justify-between" inert={selectedPage !== null}>
+      <div className="flex flex-1 flex-col justify-between" inert={selectedPage !== null || shopOpen}>
         <header className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             {hotel.logo_url ? (
@@ -102,12 +107,32 @@ export function TvScreen({
 
         <footer className="flex gap-4">
           <WatchLiveTvButton huluPackageName={hotel.hulu_package_name} />
+          {shopLink ? (
+            <button
+              type="button"
+              data-tv-focusable
+              onClick={() => setShopOpen(true)}
+              className={TV_TILE_CLASSNAME}
+            >
+              <span className="text-3xl leading-none">🛍️</span>
+              <span className="text-base font-medium text-white">Order to Room</span>
+            </button>
+          ) : null}
           <InfoGrid pages={infoPages} onSelect={setSelectedPage} />
         </footer>
       </div>
 
       {selectedPage ? (
         <InfoDetail page={selectedPage} onClose={() => setSelectedPage(null)} />
+      ) : null}
+
+      {shopOpen && shopLink ? (
+        <ShopOverlay
+          url={shopLink.url}
+          qrSvg={shopLink.qrSvg}
+          note={hotel.shop_note}
+          onClose={() => setShopOpen(false)}
+        />
       ) : null}
     </div>
   );

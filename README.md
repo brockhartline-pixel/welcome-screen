@@ -24,6 +24,35 @@ On boot it opens `https://<your-domain>/tv/<room-number>`, which:
 
 Staff manage all of the above at `/admin` (password-protected, one shared login).
 
+### In-room shop ("Order to Room")
+
+A convenience-store style shop guests use from their phone - browse aisles
+(snacks, drinks, sweets, essentials, health), build a cart, and charge the
+order to their room. The hotel stocks and delivers the items itself.
+
+- **Guests** pick the **Order to Room** tile on the TV, which shows a QR
+  code for `https://<your-domain>/shop/<room-number>`. Checkout asks for
+  first + last name; when Mews is configured and the room is mapped, the
+  last name must match the checked-in reservation (the same check WiFi
+  portals use). A tracking page then shows Received → Being packed → On the
+  way → Delivered, refreshing itself.
+- **Staff** work orders at **Admin → Orders** (auto-refreshes every 20s;
+  one-click status advance; orders Mews couldn't verify are flagged
+  "Unverified guest"), and manage items, prices, photos, stock, categories,
+  delivery fee, and open/closed at **Admin → Shop products**.
+- Prices are always recomputed server-side from the database - the browser
+  never decides what an order costs.
+- **Room charges are not posted to Mews automatically yet.** Staff post the
+  order total to the guest's folio by hand. Automating it means calling
+  Mews' `orders/add` endpoint with a product/service set up in Mews - worth
+  doing once the Mews integration is verified against a sandbox.
+- Run `supabase/migrations/0002_room_service_shop.sql` to add the shop
+  tables; it seeds a starter catalog of ~24 items you can edit or delete.
+- Rooms must exist under **Admin → Rooms** to receive orders.
+- Optional env var `SHOP_PUBLIC_BASE_URL` (e.g. `https://welcome.yourhotel.com`)
+  sets the domain in the TV's QR code; otherwise the host the TV loaded from
+  is used.
+
 **Not included in v1, on purpose:** a live "what's on now" channel guide.
 Hulu (like most streaming services) doesn't provide free third-party access
 to its programming schedule - that requires a paid EPG data provider (e.g.
@@ -35,7 +64,8 @@ Hulu, where guests browse channels themselves.
 ## 1. Create the Supabase project
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. In the SQL Editor, run `supabase/migrations/0001_init.sql`. This creates
+2. In the SQL Editor, run `supabase/migrations/0001_init.sql`, then
+   `supabase/migrations/0002_room_service_shop.sql` (in-room shop). This creates
    the `hotel`, `rooms`, and `info_pages` tables, sets up Row Level
    Security, and seeds one `hotel` row.
 3. Go to **Authentication → Users → Add user** and create the one staff
@@ -61,6 +91,7 @@ runs Next.js (Vercel is the path of least resistance).
    | `MEWS_CLIENT_TOKEN` | Mews Marketplace / your Mews rep |
    | `MEWS_ACCESS_TOKEN` | Mews Marketplace / your Mews rep |
    | `MEWS_BASE_URL` | `https://api.mews.com` (production) or `https://api.mews-demo.com` (sandbox) |
+   | `SHOP_PUBLIC_BASE_URL` | Optional - public URL used in the TV's "Order to Room" QR code |
 
 2. `cd web && npm install && npm run build` to confirm it builds, then
    deploy (`vercel deploy` if using Vercel, or `npm run build && npm run
