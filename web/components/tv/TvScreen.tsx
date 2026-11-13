@@ -87,12 +87,13 @@ export function TvScreen({
           open, so D-pad navigation can't "reach through" it to hidden tiles. */}
       <div className="relative z-10 flex flex-1 flex-col" inert={selectedPage !== null}>
         <header className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
             {hotel.logo_url ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={hotel.logo_url} alt={hotel.name} className="h-20 w-auto" />
-            ) : null}
-            <span className="text-2xl font-semibold tracking-wide">{hotel.name}</span>
+              <img src={hotel.logo_url} alt={hotel.name} className="h-40 w-auto" />
+            ) : (
+              <span className="text-2xl font-semibold tracking-wide">{hotel.name}</span>
+            )}
           </div>
           <div className="flex items-start gap-8">
             <WeatherWidget weather={data.weather} />
