@@ -122,12 +122,9 @@ export function TvScreen({
             </p>
             <div className="h-px w-24" style={{ backgroundColor: "var(--tv-accent)" }} />
             {hotel.wifi_ssid ? (
-              <div className="flex items-center gap-2 text-base uppercase tracking-widest text-white/90">
-                <span className="text-xl">📶</span>
-                <span>
-                  WiFi: {hotel.wifi_ssid}
-                  {hotel.wifi_password ? ` · ${hotel.wifi_password}` : ""}
-                </span>
+              <div className="text-base uppercase tracking-widest text-white/90">
+                WiFi: {hotel.wifi_ssid}
+                {hotel.wifi_password ? ` · ${hotel.wifi_password}` : ""}
               </div>
             ) : null}
           </div>

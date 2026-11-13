@@ -20,8 +20,7 @@ export function WatchLiveTvButton({ huluPackageName }: { huluPackageName: string
 
   return (
     <a href={intentUrl} data-tv-focusable className={TV_TILE_CLASSNAME}>
-      <span className="text-3xl leading-none">📺</span>
-      <span className="text-base font-medium text-white">Watch Live TV</span>
+      <span className="text-2xl font-semibold text-white">Watch Live TV</span>
     </a>
   );
 }

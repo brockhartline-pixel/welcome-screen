@@ -4,7 +4,7 @@ import type { InfoPage } from "@/lib/types";
 // Live TV plus each info page - reads as one consistent set, like
 // WelcomeScreen.com's bottom nav (icon on top, label below, evenly spaced).
 export const TV_TILE_CLASSNAME =
-  "group flex flex-1 flex-col items-center justify-center gap-2 rounded-2xl bg-white/15 px-4 py-5 text-center backdrop-blur-md outline-none transition-transform focus:scale-105 focus:bg-white/30 focus:ring-4 focus:ring-white";
+  "group flex flex-1 items-center justify-center rounded-2xl bg-white/15 px-4 py-6 text-center backdrop-blur-md outline-none transition-transform focus:scale-105 focus:bg-white/30 focus:ring-4 focus:ring-white";
 
 export function InfoGrid({
   pages,
@@ -23,8 +23,7 @@ export function InfoGrid({
           onClick={() => onSelect(page)}
           className={TV_TILE_CLASSNAME}
         >
-          <span className="text-3xl leading-none">{page.icon || "📄"}</span>
-          <span className="text-base font-medium text-white">{page.title}</span>
+          <span className="text-2xl font-semibold text-white">{page.title}</span>
         </button>
       ))}
     </>

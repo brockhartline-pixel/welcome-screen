@@ -21,10 +21,7 @@ export function InfoDetail({ page, onClose }: { page: InfoPage; onClose: () => v
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black/90 p-16 backdrop-blur-md">
       <div className="flex items-start justify-between">
-        <div className="flex items-center gap-4">
-          <span className="text-5xl leading-none">{page.icon || "📄"}</span>
-          <h2 className="text-5xl font-semibold text-white">{page.title}</h2>
-        </div>
+        <h2 className="text-5xl font-semibold text-white">{page.title}</h2>
         <button
           ref={closeButtonRef}
           type="button"
