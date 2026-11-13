@@ -46,28 +46,46 @@ export function TvScreen({
 
   const greetingName = data.greeting.guestFirstName;
 
-  const backgroundStyle: React.CSSProperties = hotel.background_image_url
-    ? {
-        backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 45%, rgba(0,0,0,0.5) 100%), url(${hotel.background_image_url})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }
-    : {
-        backgroundImage: `linear-gradient(160deg, ${hotel.primary_color}, #05070d)`,
-      };
-
   return (
     <div
       ref={containerRef}
-      className="flex h-screen w-screen flex-col overflow-hidden p-14 font-sans text-white"
+      className="relative flex h-screen w-screen flex-col overflow-hidden p-14 font-sans text-white"
       style={{
-        ...backgroundStyle,
+        backgroundColor: hotel.primary_color,
         ["--tv-accent" as string]: hotel.accent_color,
       }}
     >
+      {hotel.background_image_url ? (
+        <>
+          {/* The photo lives on the right side, fading into the solid
+              --primary-color backdrop on its left edge instead of sitting
+              full-bleed behind everything - keeps the welcome text block
+              on a clean, legible solid field like the reference layout. */}
+          <div
+            className="pointer-events-none absolute inset-y-0 right-0 w-[68%]"
+            style={{
+              backgroundImage: `url(${hotel.background_image_url})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 32%)",
+              maskImage: "linear-gradient(to right, transparent 0%, black 32%)",
+            }}
+          />
+          {/* Gentle full-width darkening toward the bottom so the tile row
+              stays legible over the brighter part of the photo too. */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%)",
+            }}
+          />
+        </>
+      ) : null}
+
       {/* Background content is made inert while the info detail overlay is
           open, so D-pad navigation can't "reach through" it to hidden tiles. */}
-      <div className="flex flex-1 flex-col" inert={selectedPage !== null}>
+      <div className="relative z-10 flex flex-1 flex-col" inert={selectedPage !== null}>
         <header className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             {hotel.logo_url ? (
@@ -91,11 +109,7 @@ export function TvScreen({
         <div className="flex-1" />
 
         <div className="flex max-w-3xl flex-col gap-8">
-          <div className="-m-6 flex flex-col gap-4 rounded-3xl bg-black/25 p-6 backdrop-blur-sm">
-            {hotel.logo_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={hotel.logo_url} alt="" className="h-10 w-auto" />
-            ) : null}
+          <div className="flex flex-col gap-4">
             <h1 className="font-display text-7xl uppercase leading-none tracking-wide drop-shadow-lg">
               {greetingName ? `Welcome, ${greetingName}` : "Welcome"}
             </h1>
@@ -103,7 +117,7 @@ export function TvScreen({
               className="text-lg uppercase tracking-[0.3em]"
               style={{ color: "var(--tv-accent)" }}
             >
-              To the {hotel.name}
+              {hotel.name}
             </p>
             <div className="h-px w-24" style={{ backgroundColor: "var(--tv-accent)" }} />
             {hotel.wifi_ssid ? (
