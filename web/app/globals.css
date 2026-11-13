@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -21,4 +22,11 @@ body {
     Helvetica,
     Arial,
     sans-serif;
+}
+
+/* Elegant serif used for the TV welcome screen's headline, loaded at
+   runtime via the @import above (kept out of next/font so the build never
+   depends on reaching Google Fonts). */
+.font-display {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }

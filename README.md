@@ -123,6 +123,24 @@ Android Studio (which bundles everything needed) before sideloading:
    save. It then loads the welcome screen for that room and stays there.
    To reconfigure a TV later, long-press the remote's **Back** button.
 7. The app relaunches itself automatically after the TV reboots.
+8. The app registers itself as a **Home app** (the Android `HOME` intent
+   category), so pressing the remote's Home button - or booting the TV -
+   goes straight to the welcome screen instead of the TV's stock launcher
+   and its sponsored/recommended content rows. The first time this
+   happens, Android will ask which app to use as Home; choose "Always" (or
+   this app specifically) to make it permanent. It's fully reversible from
+   the TV's own Settings → Apps → "Set as home app" at any time, without
+   touching anything else on the device.
+
+### Trimming ads/bloat beyond the launcher switch
+
+For anything the launcher switch doesn't cover (pre-installed streaming
+apps, voice assistant prompts, etc.), use the TV's own **Settings → Apps →
+[app] → Disable** rather than an ADB-based "debloat" tool. The OS itself
+won't let you disable anything that would actually break the device, which
+third-party debloat scripts don't guarantee - worth avoiding on devices
+sitting in guest rooms where a mistake isn't a quick fix. Test any change
+on one TV before rolling it out to the rest of the fleet.
 
 ### Why sideload instead of the Play Store?
 

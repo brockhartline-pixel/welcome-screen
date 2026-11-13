@@ -45,14 +45,6 @@ export function TvScreen({
   }, [roomNumber]);
 
   const greetingName = data.greeting.guestFirstName;
-  const checkoutText = data.greeting.checkoutUtc
-    ? new Intl.DateTimeFormat("en-US", {
-        weekday: "long",
-        hour: "numeric",
-        minute: "2-digit",
-        timeZone: hotel.timezone,
-      }).format(new Date(data.greeting.checkoutUtc))
-    : null;
 
   const backgroundStyle: React.CSSProperties = hotel.background_image_url
     ? {
@@ -67,7 +59,7 @@ export function TvScreen({
   return (
     <div
       ref={containerRef}
-      className="flex h-screen w-screen flex-col justify-between overflow-hidden p-14 font-sans text-white"
+      className="flex h-screen w-screen flex-col overflow-hidden p-14 font-sans text-white"
       style={{
         ...backgroundStyle,
         ["--tv-accent" as string]: hotel.accent_color,
@@ -75,7 +67,7 @@ export function TvScreen({
     >
       {/* Background content is made inert while the info detail overlay is
           open, so D-pad navigation can't "reach through" it to hidden tiles. */}
-      <div className="flex flex-1 flex-col justify-between" inert={selectedPage !== null}>
+      <div className="flex flex-1 flex-col" inert={selectedPage !== null}>
         <header className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             {hotel.logo_url ? (
@@ -84,26 +76,52 @@ export function TvScreen({
             ) : null}
             <span className="text-2xl font-semibold tracking-wide">{hotel.name}</span>
           </div>
-          <div className="flex items-center gap-8">
+          <div className="flex items-start gap-8">
             <WeatherWidget weather={data.weather} />
-            <Clock timezone={hotel.timezone} />
+            <div className="text-right">
+              <Clock timezone={hotel.timezone} />
+              <div className="mt-1 text-sm text-white/60">Room {roomNumber}</div>
+            </div>
           </div>
         </header>
 
-        <main className="flex flex-col gap-3">
-          <h1 className="text-6xl font-bold drop-shadow-lg">
-            {greetingName ? `Welcome back, ${greetingName}` : `Welcome to ${hotel.name}`}
-          </h1>
-          <p className="text-2xl text-white/80">
-            Room {roomNumber}
-            {checkoutText ? ` · Checkout ${checkoutText}` : ""}
-          </p>
-        </main>
+        {/* Pushes the welcome block + options down toward the lower third
+            of the screen, matching a WelcomeScreen-style composition
+            instead of spreading header/greeting/options evenly. */}
+        <div className="flex-1" />
 
-        <footer className="flex gap-4">
-          <WatchLiveTvButton huluPackageName={hotel.hulu_package_name} />
-          <InfoGrid pages={infoPages} onSelect={setSelectedPage} />
-        </footer>
+        <div className="flex max-w-3xl flex-col gap-8">
+          <div className="-m-6 flex flex-col gap-4 rounded-3xl bg-black/25 p-6 backdrop-blur-sm">
+            {hotel.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={hotel.logo_url} alt="" className="h-10 w-auto" />
+            ) : null}
+            <h1 className="font-display text-7xl uppercase leading-none tracking-wide drop-shadow-lg">
+              {greetingName ? `Welcome, ${greetingName}` : "Welcome"}
+            </h1>
+            <p
+              className="text-lg uppercase tracking-[0.3em]"
+              style={{ color: "var(--tv-accent)" }}
+            >
+              To the {hotel.name}
+            </p>
+            <div className="h-px w-24" style={{ backgroundColor: "var(--tv-accent)" }} />
+            {hotel.wifi_ssid ? (
+              <div className="flex items-center gap-2 text-base uppercase tracking-widest text-white/90">
+                <span className="text-xl">📶</span>
+                <span>
+                  WiFi: {hotel.wifi_ssid}
+                  {hotel.wifi_password ? ` · ${hotel.wifi_password}` : ""}
+                </span>
+              </div>
+            ) : null}
+          </div>
+
+          <footer className="flex gap-4">
+            <WatchLiveTvButton huluPackageName={hotel.hulu_package_name} />
+            <InfoGrid pages={infoPages} onSelect={setSelectedPage} />
+          </footer>
+        </div>
       </div>
 
       {selectedPage ? (
